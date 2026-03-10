@@ -40,6 +40,7 @@ PRICE_RE      = re.compile(r"\$\s?([0-9,]+)")
 YEAR_RE       = re.compile(r"\b(19|20)\d{2}\b")
 MAKE_MODEL_RE = re.compile(r"\b([A-Z][a-z]+)\s+([A-Z][A-Za-z0-9]+)")
 TRANS_RE      = re.compile(r"transmission:\s*\n?\s*([A-Za-z ]+)", re.IGNORECASE)
+FUEL_RE       = re.compile(r"fuel:\s*\n?\s*([A-Za-z ]+)", re.IGNORECASE)
 
 # -------------------- HELPERS --------------------
 def _list_run_ids(bucket: str, scrapes_prefix: str) -> list[str]:
@@ -135,6 +136,10 @@ def parse_listing(text: str) -> dict:
     t = TRANS_RE.search(text)
     if t:
         d["transmission"] = t.group(1).strip()
+
+    f = FUEL_RE.search(text)
+     if f:
+        d["fuel type"] = f.group(1).strip()
     
     # mileage variants
     mi = None

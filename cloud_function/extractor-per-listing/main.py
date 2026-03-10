@@ -137,7 +137,7 @@ def parse_listing(text: str) -> dict:
         d["transmission"] = t.group(1).strip()
 
     f = FUEL_RE.search(text)
-     if f:
+    if f:
         d["fuel type"] = f.group(1).strip()
     
     # mileage variants

@@ -132,7 +132,6 @@ def parse_listing(text: str) -> dict:
         d["make"] = mm.group(1)
         d["model"] = mm.group(2)
 
-    # search for transmission info
     t = TRANS_RE.search(text)
     if t:
         d["transmission"] = t.group(1).strip()

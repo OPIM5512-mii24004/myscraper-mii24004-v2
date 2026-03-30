@@ -169,11 +169,13 @@ def _vertex_extract_fields(raw_text: str) -> dict:
             "make": {"type": "string", "nullable": True},
             "model": {"type": "string", "nullable": True},
             "mileage": {"type": "integer", "nullable": True},
+            "transmission": {"type": "string", "nullable": True},
+            "fuel_type": {"type": "string", "nullable": True},
             "title_status": {"type": "string", "nullable": True},
             "color": {"type": "string", "nullable": True},
             "vin": {"type": "string", "nullable": True}
         },
-        "required": ["price", "year", "make", "model", "mileage", "title_status", "color", "vin"]
+        "required": ["price", "year", "make", "model", "mileage", "transmission", "fuel_type", "title_status", "color", "vin"]
     }
 
     # System instruction (will be prepended to the prompt)
@@ -182,6 +184,8 @@ def _vertex_extract_fields(raw_text: str) -> dict:
         "Return a strict JSON object that conforms to the provided schema. "
         "If a value is not present, use null. "
         "Rules: integers for price/year/mileage; price in USD; mileage in miles;"
+        "transmission must be automatic or manual, if not write null."
+        "title status must be clean or salvaged, if not write null."
         "vin must be 17 characters long, if not write null."
         "do not infer values not explicitly present; do not add extra keys."
     )
@@ -234,6 +238,8 @@ def _vertex_extract_fields(raw_text: str) -> dict:
 
     parsed["make"] = _norm_str(parsed.get("make"))
     parsed["model"] = _norm_str(parsed.get("model"))
+    parsed["transmission"] = _norm_str(parsed.get("transmission"))
+    parsed["fuel_type"] = _norm_str(parsed.get("fuel_type"))
     parsed["title_status"] = _norm_str(parsed.get("title_status"))
     parsed["color"] = _norm_str(parsed.get("color"))
     parsed["vin"] = _norm_str(parsed.get("vin"))
@@ -325,6 +331,8 @@ def llm_extract_http(request: Request):
                 "make": parsed.get("make"),
                 "model": parsed.get("model"),
                 "mileage": parsed.get("mileage"),
+                "transmission": parsed.get("transmission"),
+                "fuel_type": parsed.get("fuel_type"),
                 "title_status": parsed.get("title_status"),
                 "color": parsed.get("color"),
                 "vin": parsed.get("vin"),
